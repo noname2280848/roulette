@@ -28,9 +28,8 @@
   <h2>休憩ルーレット</h2>
   <div>
     <textarea id="restInput" placeholder="名前をカンマ区切りで入力（例: たろう、はなこ、じろう）"></textarea><br>
-    <button onclick="startRestRoulette()">休憩ルーレットを開始！</button>
-    <button onclick="nextRest()">次の休憩者を表示</button>
-    <div class="result" id="restResult">休憩者：？？？</div>
+    <button onclick="showAllRest()">休憩ルーレットを開始！</button>
+    <div class="result" id="restResult">休憩順：？？？</div>
   </div>
 
   <h2>抽選履歴</h2>
@@ -87,32 +86,25 @@
       history.scrollTop = history.scrollHeight;
     }
 
-    // 休憩ルーレット用
-    let restQueue = [];
-
-    function startRestRoulette() {
+    // 休憩ルーレット（全員をシャッフルして一括表示）
+    function showAllRest() {
       const input = document.getElementById("restInput").value.trim();
       if (!input) {
         alert("名前を入力してください！");
         return;
       }
-      const names = input.split("、").map(name => name.trim()).filter(name => name);
+      const names = input.split("、").map(n => n.trim()).filter(n => n);
       if (names.length === 0) {
         alert("有効な名前がありません！");
         return;
       }
-      restQueue = shuffleArray(names);
-      nextRest(); // 最初の1人を表示
-    }
 
-    function nextRest() {
-      if (restQueue.length === 0) {
-        document.getElementById("restResult").textContent = "休憩者：全員表示済み！";
-        return;
-      }
-      const name = restQueue.shift();
-      document.getElementById("restResult").textContent = "休憩者： " + name;
-      addHistory("[休憩者] → " + name);
+      const shuffled = shuffleArray(names);
+      const resultText = shuffled.map((name, i) => `${i + 1}. ${name}`).join("\n");
+
+      document.getElementById("restResult").innerText = "休憩順：\n" + resultText;
+
+      addHistory("[休憩ルーレット] ↓\n" + resultText);
     }
 
     function shuffleArray(array) {
@@ -127,3 +119,4 @@
 
 </body>
 </html>
+
