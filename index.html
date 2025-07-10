@@ -96,7 +96,7 @@
         alert("名前を入力してください！");
         return;
       }
-      const names = input.split(",").map(name => name.trim()).filter(name => name);
+      const names = input.split("、").map(name => name.trim()).filter(name => name);
       if (names.length === 0) {
         alert("有効な名前がありません！");
         return;
