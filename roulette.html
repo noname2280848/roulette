@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ルーレットアプリ</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin: 20px; }
+    h1 { font-size: 24px; }
+    button { font-size: 18px; padding: 10px; margin: 10px; }
+    .result { font-size: 22px; margin: 10px; }
+    textarea { width: 90%; height: 150px; font-family: monospace; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>IdentityVルーレット</h1>
+
+  <div class="result" id="hunterResult">ハンター：？？？</div>
+  <button onclick="spinHunter()">ハンタールーレットを回す！</button>
+
+  <div class="result" id="mapResult">マップ：？？？</div>
+  <button onclick="spinMap()">マップルーレットを回す！</button>
+
+  <h2>抽選履歴</h2>
+  <textarea id="history" readonly></textarea>
+
+  <script>
+    const names = [
+      "レオ", "ピエロ", "鹿", "リッパー", "蜘蛛", "芸者", "白黒", "ジョゼフ",
+      "バルク", "ハスター", "魔女", "泣き虫", "ルキノ", "女王", "ボンボン", "アン",
+      "アントニオ", "ガラテア", "アンデッド", "ウィル", "グレイス", "蝋人形師", "悪夢",
+      "キーガン", "隠者", "イタカ", "サングリア", "フルゴ", "アイビィ", "足萎え",
+      "フラバルー", "雑貨商"
+    ];
+
+    const maps = [
+      "軍需工場", "聖心病院", "赤の教会", "湖景村", "月の河公園", "レオの思い出", "永眠町", "中華街"
+    ];
+
+    function spinHunter() {
+      const index = Math.floor(Math.random() * names.length);
+      const result = names[index];
+      document.getElementById("hunterResult").textContent = "ハンター： " + result;
+      addHistory("[ハンター] → " + result);
+    }
+
+    function spinMap() {
+      const index = Math.floor(Math.random() * maps.length);
+      const result = maps[index];
+      document.getElementById("mapResult").textContent = "マップ： " + result;
+      addHistory("[マップ] → " + result);
+    }
+
+    function addHistory(text) {
+      const history = document.getElementById("history");
+      history.value += text + "\n";
+      history.scrollTop = history.scrollHeight;
+    }
+  </script>
+
+</body>
+</html>
