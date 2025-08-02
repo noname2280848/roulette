@@ -5,40 +5,44 @@
   <title>IdentityVルーレット</title>
   <style>
     body { font-family: sans-serif; text-align: center; margin: 20px; }
-    h1 { font-size: 24px; }
-    button { font-size: 16px; padding: 10px; margin: 8px; }
+    h1, h2 { font-size: 24px; margin-top: 30px; }
+    button { font-size: 18px; padding: 10px; margin: 10px; }
     .result { font-size: 20px; margin: 10px; }
-    textarea, input { width: 90%; font-family: monospace; margin-top: 10px; }
-    #history { height: 150px; }
+    textarea { width: 90%; height: 100px; font-family: monospace; margin-top: 10px; }
   </style>
 </head>
 <body>
 
   <h1>IdentityVルーレット</h1>
 
+  <!-- ハンタールーレット -->
+  <h2>ハンタールーレット</h2>
   <div class="result" id="hunterResult">ハンター：？？？</div>
   <button onclick="spinHunter()">ハンタールーレットを回す！</button>
 
+  <!-- サバイバールーレット -->
+  <h2>サバイバールーレット</h2>
   <div class="result" id="survivorResult">サバイバー：？？？</div>
   <button onclick="spinSurvivor()">サバイバールーレットを回す！</button>
 
+  <!-- マップルーレット -->
+  <h2>マップルーレット</h2>
   <div class="result" id="mapResult">マップ：？？？</div>
   <button onclick="spinMap()">マップルーレットを回す！</button>
 
-  <h2>休憩ルーレット</h2>
-  <div>
-    <textarea id="restInput" placeholder="名前をカンマ区切りで入力（例: たろう、はなこ、じろう）"></textarea><br>
-    <button onclick="showAllRest()">休憩ルーレットを開始！</button>
-    <div class="result" id="restResult">休憩順：？？？</div>
-  </div>
+  <!-- 休憩ルーレット -->
+  <h2>休憩ルーレット（順番）</h2>
+  <textarea id="breakInput" placeholder="名前をカンマ区切りで入力（例：太郎,花子,次郎）"></textarea><br>
+  <button onclick="spinBreak()">休憩順を決める</button>
+  <div class="result" id="breakResult"></div>
 
+  <!-- チーム分けルーレット -->
   <h2>チーム分けルーレット</h2>
-<div>
-  <textarea id="teamInput" placeholder="名前をカンマ区切りで入力（例: 太郎, 花子, 次郎）"></textarea><br>
+  <textarea id="teamInput" placeholder="名前をカンマ区切りで入力（例：太郎,花子,次郎）"></textarea><br>
   <button onclick="makeTeams()">チーム分けを開始！</button>
-  <div class="result" id="teamResult">チーム分け結果：？？？</div>
-</div>
+  <div class="result" id="teamResult"></div>
 
+  <!-- 抽選履歴 -->
   <h2>抽選履歴</h2>
   <textarea id="history" readonly></textarea>
 
@@ -64,27 +68,88 @@
       "軍需工場", "聖心病院", "赤の教会", "湖景村", "月の河公園", "レオの思い出", "永眠町", "中華街"
     ];
 
+    let lastSmallTeam = [];
+
     function spinHunter() {
-      const result = pickRandom(hunters);
+      const result = hunters[Math.floor(Math.random() * hunters.length)];
       document.getElementById("hunterResult").textContent = "ハンター： " + result;
       addHistory("[ハンター] → " + result);
     }
 
     function spinSurvivor() {
-      const result = pickRandom(survivors);
+      const result = survivors[Math.floor(Math.random() * survivors.length)];
       document.getElementById("survivorResult").textContent = "サバイバー： " + result;
       addHistory("[サバイバー] → " + result);
     }
 
     function spinMap() {
-      const result = pickRandom(maps);
+      const result = maps[Math.floor(Math.random() * maps.length)];
       document.getElementById("mapResult").textContent = "マップ： " + result;
       addHistory("[マップ] → " + result);
     }
 
-    function pickRandom(array) {
-      const index = Math.floor(Math.random() * array.length);
-      return array[index];
+    function spinBreak() {
+      const input = document.getElementById("breakInput").value;
+      const names = input.split(",").map(n => n.trim()).filter(n => n);
+      const shuffled = names.sort(() => Math.random() - 0.5);
+      const result = shuffled.map((name, i) => `${i + 1}番目：${name}`).join("\n");
+      document.getElementById("breakResult").textContent = result;
+      addHistory("[休憩順] → \n" + result);
+    }
+
+    function makeTeams() {
+      const input = document.getElementById("teamInput").value;
+      let members = input.split(",").map(n => n.trim()).filter(n => n);
+
+      if (members.length < 2) {
+        document.getElementById("teamResult").textContent = "メンバーを2人以上入力してください。";
+        return;
+      }
+
+      let teams = [];
+
+      if (members.length <= 10) {
+        members = shuffleArray(members);
+        const half = Math.ceil(members.length / 2);
+        teams.push(members.slice(0, half));
+        teams.push(members.slice(half));
+      } else {
+        members = shuffleArray(members);
+
+        // 前回の小チームのメンバーを5人チームに優先的に入れる
+        const bigTeams = [];
+        const others = [...members];
+
+        while (others.length > 0) {
+          let team = [];
+          while (team.length < 5 && others.length > 0) {
+            let name;
+            if (lastSmallTeam.length > 0) {
+              name = others.find(n => lastSmallTeam.includes(n)) || others[0];
+            } else {
+              name = others[0];
+            }
+            team.push(name);
+            others.splice(others.indexOf(name), 1);
+          }
+          bigTeams.push(team);
+        }
+
+        lastSmallTeam = bigTeams[bigTeams.length - 1].length < 5 ? bigTeams[bigTeams.length - 1] : [];
+        teams = bigTeams;
+      }
+
+      let result = "";
+      teams.forEach((team, i) => {
+        result += `チーム${i + 1}： ${team.join(", ")}\n`;
+      });
+
+      document.getElementById("teamResult").textContent = result.trim();
+      addHistory("[チーム分け] → \n" + result.trim());
+    }
+
+    function shuffleArray(array) {
+      return array.sort(() => Math.random() - 0.5);
     }
 
     function addHistory(text) {
@@ -92,95 +157,7 @@
       history.value += text + "\n";
       history.scrollTop = history.scrollHeight;
     }
-
-    // 休憩ルーレット（全員をシャッフルして一括表示）
-    function showAllRest() {
-      const input = document.getElementById("restInput").value.trim();
-      if (!input) {
-        alert("名前を入力してください！");
-        return;
-      }
-      const names = input.split("、").map(n => n.trim()).filter(n => n);
-      if (names.length === 0) {
-        alert("有効な名前がありません！");
-        return;
-      }
-
-      const shuffled = shuffleArray(names);
-      const resultText = shuffled.map((name, i) => `${i + 1}. ${name}`).join("\n");
-
-      document.getElementById("restResult").innerText = "休憩順：\n" + resultText;
-
-      addHistory("[休憩ルーレット] ↓\n" + resultText);
-    }
-
-    function shuffleArray(array) {
-      const copy = [...array];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
-  let carryOverMembers = [];
-
-    function makeTeams() {
-      const input = document.getElementById("teamInput").value.trim();
-      if (!input) {
-        alert("名前を入力してください！");
-        return;
-      }
-
-      let names = input.split(",").map(n => n.trim()).filter(n => n);
-      if (names.length === 0) {
-        alert("有効な名前がありません！");
-        return;
-      }
-
-      // 追加ルール：繰り越しメンバーを先に入れる
-      if (carryOverMembers.length > 0) {
-        names = [...carryOverMembers, ...names];
-        carryOverMembers = [];
-      }
-
-      const shuffled = shuffleArray(names);
-      let resultText = "";
-
-      if (shuffled.length <= 10) {
-        // 2チームに分ける
-        const mid = Math.ceil(shuffled.length / 2);
-        const teamA = shuffled.slice(0, mid);
-        const teamB = shuffled.slice(mid);
-        resultText += "チームA:\n" + teamA.join(", ") + "\n\n";
-        resultText += "チームB:\n" + teamB.join(", ");
-      } else {
-        // 5人チームを作成、残りは繰り越す
-        const teams = [];
-        let i = 0;
-        while (i < shuffled.length) {
-          const team = shuffled.slice(i, i + 5);
-          if (team.length < 5) {
-            carryOverMembers = team;
-            break;
-          }
-          teams.push(team);
-          i += 5;
-        }
-
-        teams.forEach((team, index) => {
-          resultText += `チーム${index + 1}:\n` + team.join(", ") + "\n\n";
-        });
-
-        if (carryOverMembers.length > 0) {
-          resultText += `次回優先メンバー:\n${carryOverMembers.join(", ")}`;
-        }
-      }
-
-      document.getElementById("teamResult").innerText = "チーム分け結果：\n" + resultText;
-      addHistory("[チームルーレット] ↓\n" + resultText);
-    }
-
   </script>
-
 </body>
 </html>
+
