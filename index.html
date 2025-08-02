@@ -32,13 +32,13 @@
 
   <!-- 休憩ルーレット -->
   <h2>休憩ルーレット（順番）</h2>
-  <textarea id="breakInput" placeholder="名前をカンマ区切りで入力（例：太郎,花子,次郎）"></textarea><br>
+  <textarea id="breakInput" placeholder="名前をカンマ区切りで入力（例：太郎、花子、次郎）"></textarea><br>
   <button onclick="spinBreak()">休憩順を決める</button>
   <div class="result" id="breakResult"></div>
 
   <!-- チーム分けルーレット -->
   <h2>チーム分けルーレット</h2>
-  <textarea id="teamInput" placeholder="名前をカンマ区切りで入力（例：太郎,花子,次郎）"></textarea><br>
+  <textarea id="teamInput" placeholder="名前をカンマ区切りで入力（例：太郎、花子、次郎）"></textarea><br>
   <button onclick="makeTeams()">チーム分けを開始！</button>
   <div class="result" id="teamResult"></div>
 
@@ -90,7 +90,7 @@
 
     function spinBreak() {
       const input = document.getElementById("breakInput").value;
-      const names = input.split(",").map(n => n.trim()).filter(n => n);
+      const names = input.split("、").map(n => n.trim()).filter(n => n);
       const shuffled = names.sort(() => Math.random() - 0.5);
       const result = shuffled.map((name, i) => `${i + 1}番目：${name}`).join("\n");
       document.getElementById("breakResult").textContent = result;
@@ -99,7 +99,7 @@
 
     function makeTeams() {
       const input = document.getElementById("teamInput").value;
-      let members = input.split(",").map(n => n.trim()).filter(n => n);
+      let members = input.split("、").map(n => n.trim()).filter(n => n);
 
       if (members.length < 2) {
         document.getElementById("teamResult").textContent = "メンバーを2人以上入力してください。";
