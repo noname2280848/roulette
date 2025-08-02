@@ -56,6 +56,64 @@
       history.value += text + "\n";
       history.scrollTop = history.scrollHeight;
     }
+  let carryOverMembers = [];
+
+    function makeTeams() {
+      const input = document.getElementById("teamInput").value.trim();
+      if (!input) {
+        alert("名前を入力してください！");
+        return;
+      }
+
+      let names = input.split(",").map(n => n.trim()).filter(n => n);
+      if (names.length === 0) {
+        alert("有効な名前がありません！");
+        return;
+      }
+
+      // 追加ルール：繰り越しメンバーを先に入れる
+      if (carryOverMembers.length > 0) {
+        names = [...carryOverMembers, ...names];
+        carryOverMembers = [];
+      }
+
+      const shuffled = shuffleArray(names);
+      let resultText = "";
+
+      if (shuffled.length <= 10) {
+        // 2チームに分ける
+        const mid = Math.ceil(shuffled.length / 2);
+        const teamA = shuffled.slice(0, mid);
+        const teamB = shuffled.slice(mid);
+        resultText += "チームA:\n" + teamA.join(", ") + "\n\n";
+        resultText += "チームB:\n" + teamB.join(", ");
+      } else {
+        // 5人チームを作成、残りは繰り越す
+        const teams = [];
+        let i = 0;
+        while (i < shuffled.length) {
+          const team = shuffled.slice(i, i + 5);
+          if (team.length < 5) {
+            carryOverMembers = team;
+            break;
+          }
+          teams.push(team);
+          i += 5;
+        }
+
+        teams.forEach((team, index) => {
+          resultText += `チーム${index + 1}:\n` + team.join(", ") + "\n\n";
+        });
+
+        if (carryOverMembers.length > 0) {
+          resultText += `次回優先メンバー:\n${carryOverMembers.join(", ")}`;
+        }
+      }
+
+      document.getElementById("teamResult").innerText = "チーム分け結果：\n" + resultText;
+      addHistory("[チームルーレット] ↓\n" + resultText);
+    }
+
   </script>
 
 </body>
