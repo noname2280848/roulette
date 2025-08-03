@@ -31,6 +31,12 @@
     <div class="result" id="restResult">休憩順：？？？</div>
   </div>
 
+  <h2>チーム分けルーレット</h2>
+  <p>名前を改行で入力してください：</p>
+  <textarea id="teamInput" placeholder="例：\n田中\n山田\n佐藤\n鈴木\n高橋"></textarea><br>
+  <button onclick="runTeamSplit()">チームを分ける</button>
+  <div class="output" id="teamOutput"></div>
+
   <h2>抽選履歴</h2>
   <textarea id="history" readonly></textarea>
 
@@ -113,6 +119,19 @@
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
       return copy;
+    }
+
+    function runTeamSplit() {
+      const input = document.getElementById("teamInput").value.trim().split("\n").filter(name => name);
+      if (input.length < 2) {
+        document.getElementById("teamOutput").textContent = "2人以上の名前を入力してください。";
+        return;
+      }
+      shuffle(input);
+      const mid = Math.ceil(input.length / 2);
+      const teamA = input.slice(0, mid);
+      const teamB = input.slice(mid);
+      document.getElementById("teamOutput").textContent = `チームA:\n${teamA.join("\n")}\n\nチームB:\n${teamB.join("\n")}`;
     }
   </script>
 
