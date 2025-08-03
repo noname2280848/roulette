@@ -108,12 +108,7 @@
 
       let teams = [];
 
-      if (members.length <= 10) {
-        members = shuffleArray(members);
-        const half = Math.ceil(members.length / 2);
-        teams.push(members.slice(0, half));
-        teams.push(members.slice(half));
-      } else {
+    
         members = shuffleArray(members);
 
         // 前回の小チームのメンバーを5人チームに優先的に入れる
@@ -137,7 +132,7 @@
 
         lastSmallTeam = bigTeams[bigTeams.length - 1].length < 5 ? bigTeams[bigTeams.length - 1] : [];
         teams = bigTeams;
-      }
+      
 
       let result = "";
       teams.forEach((team, i) => {
