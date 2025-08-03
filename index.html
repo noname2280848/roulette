@@ -99,33 +99,40 @@
 
     // 休憩ルーレット（シャッフル）
     function spinBreak() {
-      const input = document.getElementById("breakInput").value.trim();
-      const names = input.split("、").map(n => n.trim()).filter(n => n);
-      if (names.length === 0) {
-        alert("名前を「、」で区切って入力してください");
+      let input = document.getElementById("breakInput").value;
+      let names = input.split(/[\n,、]/).map(n => n.trim()).filter(n => n);
+      if (names.length < 2) {
+        alert("2人以上入力してください。");
         return;
       }
-      const shuffled = names.sort(() => Math.random() - 0.5);
-      const resultText = "休憩順： " + shuffled.join(" → ");
-      document.getElementById("breakResult").textContent = resultText;
-      addHistory("[休憩順] → " + shuffled.join(" → "));
+      shuffle(names);
+      document.getElementById("breakResult").innerHTML = "休憩順：<br>" + names.join(" → ");
+      addHistory("[休憩順] → " + names.join(" → "));
     }
 
     // チーム分けルーレット（2チームに分ける）
     function splitTeams() {
-      const input = document.getElementById("teamInput").value.trim();
-      const names = input.split("、").map(n => n.trim()).filter(n => n);
+      let input = document.getElementById("teamInput").value;
+      let names = input.split(/[\n,、]/).map(n => n.trim()).filter(n => n);
       if (names.length < 2) {
-        alert("2人以上の名前を入力してください");
+        alert("2人以上入力してください。");
         return;
       }
-      const shuffled = names.sort(() => Math.random() - 0.5);
-      const half = Math.ceil(shuffled.length / 2);
-      const teamA = shuffled.slice(0, half);
-      const teamB = shuffled.slice(half);
-      const resultText = `チームA：${teamA.join("、")} ／ チームB：${teamB.join("、")}`;
-      document.getElementById("teamResult").textContent = resultText;
-      addHistory("[チーム分け] → A：" + teamA.join("、") + "｜B：" + teamB.join("、"));
+      shuffle(names);
+      let mid = Math.ceil(names.length / 2);
+      let teamA = names.slice(0, mid);
+      let teamB = names.slice(mid);
+      let resultText = "チームA： " + teamA.join(", ") + "<br>チームB： " + teamB.join(", ");
+      document.getElementById("teamResult").innerHTML = resultText;
+      addHistory("[チーム分け] → A: " + teamA.join(", ") + " | B: " + teamB.join(", "));
+    }
+
+    // 配列をランダムに並び替える関数（Fisher–Yates シャッフル）
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
   </script>
 
