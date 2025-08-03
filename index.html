@@ -6,41 +6,44 @@
   <style>
     body { font-family: sans-serif; text-align: center; margin: 20px; }
     h1 { font-size: 24px; }
-    button { font-size: 16px; padding: 10px; margin: 8px; }
+    button { font-size: 16px; padding: 10px; margin: 5px; }
     .result { font-size: 20px; margin: 10px; }
-    textarea, input { width: 90%; font-family: monospace; margin-top: 10px; }
-    #history { height: 150px; }
+    textarea, input[type="text"] {
+      width: 90%;
+      font-size: 16px;
+      margin: 10px auto;
+    }
+    textarea { height: 120px; font-family: monospace; }
   </style>
 </head>
 <body>
 
   <h1>IdentityVルーレット</h1>
-  <!-- ハンタールーレット -->
+  <!-- ハンター -->
   <div class="result" id="hunterResult">ハンター：？？？</div>
   <button onclick="spinHunter()">ハンタールーレットを回す！</button>
 
-  <!-- サバイバールーレット -->
+  <!-- サバイバー -->
   <div class="result" id="survivorResult">サバイバー：？？？</div>
   <button onclick="spinSurvivor()">サバイバールーレットを回す！</button>
 
-  <!-- マップルーレット -->
+  <!-- マップ -->
   <div class="result" id="mapResult">マップ：？？？</div>
   <button onclick="spinMap()">マップルーレットを回す！</button>
 
   <!-- 休憩ルーレット -->
   <h2>休憩ルーレット</h2>
-  <div>
-    <textarea id="restInput" placeholder="名前を「、」で区切って入力してください"></textarea><br>
-    <button onclick="spinBreak()">休憩ルーレットを開始！</button>
-    <div class="result" id="restResult">休憩順：？？？</div>
+  <input type="text" id="breakInput" placeholder="名前を「、」で区切って入力（例：A、B、C）">
+  <div class="result" id="breakResult">休憩順：？？？</div>
+  <button onclick="spinBreak()">休憩ルーレットを回す！</button>
   
-  <!-- チーム分けルーレット -->
+  <!-- チーム分け -->
   <h2>チーム分けルーレット</h2>
-  <p>名前を改行で入力してください：</p>
-  <textarea id="teamInput" placeholder="名前を「、」で区切って入力してください"></textarea><br>
-  <button onclick="spinTeam()">チームを分ける</button>
-  <div class="output" id="teamOutput"></div>
+  <input type="text" id="teamInput" placeholder="名前を「、」で区切って入力（例：A、B、C、D）">
+  <div class="result" id="teamResult">チーム分け：？？？</div>
+  <button onclick="splitTeams()">チーム分けルーレットを回す！</button>
 
+  <!-- 履歴 -->
   <h2>抽選履歴</h2>
   <textarea id="history" readonly></textarea>
 
@@ -66,72 +69,63 @@
       "軍需工場", "聖心病院", "赤の教会", "湖景村", "月の河公園", "レオの思い出", "永眠町", "中華街"
     ];
 
-   // ランダムに選ぶ関数（1人）
-    function getRandom(array) {
-      return array[Math.floor(Math.random() * array.length)];
-    }
-
-    // ランダムにシャッフル（複数人）
-    function shuffleArray(array) {
-      const shuffled = array.slice();
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
-    }
-
-    // 履歴追加関数
+   // 履歴を追加する関数
     function addHistory(text) {
       const history = document.getElementById("history");
       history.value += text + "\n";
       history.scrollTop = history.scrollHeight;
     }
-    
-    // ハンタールーレット
+
+    // ハンター抽選
     function spinHunter() {
-      const result = pickRandom(hunters);
+      const result = hunters[Math.floor(Math.random() * hunters.length)];
       document.getElementById("hunterResult").textContent = "ハンター： " + result;
       addHistory("[ハンター] → " + result);
     }
 
-    // サバイバールーレット
+    // サバイバー抽選
     function spinSurvivor() {
-      const result = pickRandom(survivors);
+      const result = survivors[Math.floor(Math.random() * survivors.length)];
       document.getElementById("survivorResult").textContent = "サバイバー： " + result;
       addHistory("[サバイバー] → " + result);
     }
 
-    // マップルーレット
+   // マップ抽選
     function spinMap() {
-      const result = pickRandom(maps);
+      const result = maps[Math.floor(Math.random() * maps.length)];
       document.getElementById("mapResult").textContent = "マップ： " + result;
       addHistory("[マップ] → " + result);
     }
 
-    // 休憩ルーレット（全員をシャッフルして一括表示）
+    // 休憩ルーレット（シャッフル）
     function spinBreak() {
       const input = document.getElementById("breakInput").value.trim();
-      if (!input) return alert("名前を入力してください");
-      const names = input.split("、").map(name => name.trim()).filter(n => n);
-      const result = shuffleArray(names);
-      const resultText = result.join(" → ");
-      document.getElementById("breakResult").textContent = "休憩順： " + resultText;
-      addHistory("[休憩順] → " + resultText);
+      const names = input.split("、").map(n => n.trim()).filter(n => n);
+      if (names.length === 0) {
+        alert("名前を「、」で区切って入力してください");
+        return;
+      }
+      const shuffled = names.sort(() => Math.random() - 0.5);
+      const resultText = "休憩順： " + shuffled.join(" → ");
+      document.getElementById("breakResult").textContent = resultText;
+      addHistory("[休憩順] → " + shuffled.join(" → "));
     }
 
-    // チーム分け（2チームにシャッフルして分ける）
-    function spinTeam() {
+    // チーム分けルーレット（2チームに分ける）
+    function splitTeams() {
       const input = document.getElementById("teamInput").value.trim();
-      if (!input) return alert("名前を入力してください");
-      const names = input.split("、").map(name => name.trim()).filter(n => n);
-      const shuffled = shuffleArray(names);
-      const mid = Math.ceil(shuffled.length / 2);
-      const teamA = shuffled.slice(0, mid).join("、");
-      const teamB = shuffled.slice(mid).join("、");
-      const resultText = `チームA：${teamA} ／ チームB：${teamB}`;
-      document.getElementById("teamResult").textContent = "チーム分け： " + resultText;
-      addHistory("[チーム分け] → " + resultText);
+      const names = input.split("、").map(n => n.trim()).filter(n => n);
+      if (names.length < 2) {
+        alert("2人以上の名前を入力してください");
+        return;
+      }
+      const shuffled = names.sort(() => Math.random() - 0.5);
+      const half = Math.ceil(shuffled.length / 2);
+      const teamA = shuffled.slice(0, half);
+      const teamB = shuffled.slice(half);
+      const resultText = `チームA：${teamA.join("、")} ／ チームB：${teamB.join("、")}`;
+      document.getElementById("teamResult").textContent = resultText;
+      addHistory("[チーム分け] → A：" + teamA.join("、") + "｜B：" + teamB.join("、"));
     }
   </script>
 
