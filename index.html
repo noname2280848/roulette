@@ -33,7 +33,7 @@
 
   <h2>チーム分けルーレット</h2>
   <p>名前を改行で入力してください：</p>
-  <textarea id="teamInput" placeholder="例：\n田中\n山田\n佐藤\n鈴木\n高橋"></textarea><br>
+  <textarea id="teamInput" placeholder="名前をカンマ区切りで入力（例: たろう,はなこ,じろう）"></textarea><br>
   <button onclick="runTeamSplit()">チームを分ける</button>
   <div class="output" id="teamOutput"></div>
 
@@ -122,16 +122,21 @@
     }
 
     function runTeamSplit() {
-      const input = document.getElementById("teamInput").value.trim().split("\n").filter(name => name);
-      if (input.length < 2) {
-        document.getElementById("teamOutput").textContent = "2人以上の名前を入力してください。";
+      const names = parseNames(document.getElementById("teamInput").value);
+      if (names.length < 2) {
+        alert("2人以上を入力してください！");
         return;
       }
-      shuffle(input);
-      const mid = Math.ceil(input.length / 2);
-      const teamA = input.slice(0, mid);
-      const teamB = input.slice(mid);
-      document.getElementById("teamOutput").textContent = `チームA:\n${teamA.join("\n")}\n\nチームB:\n${teamB.join("\n")}`;
+      const shuffled = names.sort(() => Math.random() - 0.5);
+      const half = Math.ceil(shuffled.length / 2);
+      const teamA = shuffled.slice(0, half);
+      const teamB = shuffled.slice(half);
+      const result = `
+        <strong>チームA：</strong><br>${teamA.join(" / ")}<br><br>
+        <strong>チームB：</strong><br>${teamB.join(" / ")}
+      `;
+      document.getElementById("teamResult").innerHTML = result;
+      addHistory("[チーム分け] → A: " + teamA.join(", ") + " | B: " + teamB.join(", "));
     }
   </script>
 
