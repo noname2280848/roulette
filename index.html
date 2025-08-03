@@ -109,29 +109,7 @@
       let teams = [];
 
     
-        members = shuffleArray(members);
-
-        // 前回の小チームのメンバーを5人チームに優先的に入れる
-        const bigTeams = [];
-        const others = [...members];
-
-        while (others.length > 0) {
-          let team = [];
-          while (team.length < 5 && others.length > 0) {
-            let name;
-            if (lastSmallTeam.length > 0) {
-              name = others.find(n => lastSmallTeam.includes(n)) || others[0];
-            } else {
-              name = others[0];
-            }
-            team.push(name);
-            others.splice(others.indexOf(name), 1);
-          }
-          bigTeams.push(team);
-        }
-
-        lastSmallTeam = bigTeams[bigTeams.length - 1].length < 5 ? bigTeams[bigTeams.length - 1] : [];
-        teams = bigTeams;
+       
       
 
       let result = "";
