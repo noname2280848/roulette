@@ -26,14 +26,14 @@
 
   <h2>休憩ルーレット</h2>
   <div>
-    <textarea id="restInput" placeholder="名前をカンマ区切りで入力（例: たろう,はなこ,じろう）"></textarea><br>
+    <textarea id="restInput" placeholder="名前をカンマ区切りで入力（例: たろう、はなこ、じろう）"></textarea><br>
     <button onclick="showAllRest()">休憩ルーレットを開始！</button>
     <div class="result" id="restResult">休憩順：？？？</div>
   
 
   <h2>チーム分けルーレット</h2>
   <p>名前を改行で入力してください：</p>
-  <textarea id="teamInput" placeholder="名前をカンマ区切りで入力（例: たろう,はなこ,じろう）"></textarea><br>
+  <textarea id="teamInput" placeholder="名前をカンマ区切りで入力（例: たろう、はなこ、じろう）"></textarea><br>
   <button onclick="runTeamSplit()">チームを分ける</button>
   <div class="output" id="teamOutput"></div>
 
@@ -98,7 +98,7 @@
         alert("名前を入力してください！");
         return;
       }
-      const names = input.split(",").map(n => n.trim()).filter(n => n);
+      const names = input.split("、").map(n => n.trim()).filter(n => n);
       if (names.length === 0) {
         alert("有効な名前がありません！");
         return;
