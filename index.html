@@ -121,7 +121,7 @@
     function spinHunter() {
       const force = document.getElementById("forceHunter").value;
       const result = force || hunters[Math.floor(Math.random() * hunters.length)];
-      displayResult("hunter", "ハンター", result, "hunterResult", getImgPath(Hunter, result));
+      displayResult("hunter", "ハンター", result, "hunterResult", "hunterImg");
       if(force) document.getElementById("forceHunter").value = "";
     }
 
