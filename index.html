@@ -37,9 +37,15 @@
 
   <hr>
 
-    <h2>人格ルーレット</h2>
     <div class="result" id="personaResult">人格：？？？</div>
     <button onclick="spinPersona()">人格を決める！</button>
+
+  <hr>
+  
+    <div class="result" id="traitResult">特質：？？？</div>
+    <img id="traitImg" class="result-img" src="" alt="trait">
+    <br>
+    <button onclick="spinTrait()" >特質を決める！</button>
 
   <hr>
 
@@ -50,7 +56,6 @@
 
   <hr>
 
-  <h2>縛りルーレット</h2>
   <div class="result" id="shibariResult">縛り内容：？？？</div>
   <button onclick="spinShibari()">縛りを決める！</button>
 
@@ -95,6 +100,7 @@
                       "試合中ミュート＋チャット禁止", "チェイス中アイテム、スキル禁止", "解読、治療などの調整をすべてミスする", 
                       "試合中日本語禁止",];
     const personas = ["右のみ", "左のみ", "下のみ", "上のみ", "右下", "左右", "右上" , "上下" , "左下" , "左上" , "人格なし"];
+    const traits = ["リッスン", "異常", "興奮", "巡視者", "瞬間移動", "監視者", "神出鬼没", "移形"];
 
 const imageMap = {
   // ハンター (34)
@@ -127,6 +133,10 @@ const imageMap = {
   "軍需工場": "Arms_Factory.png", "聖心病院": "Sacred_Heart_Hospital.png", "赤の教会": "The_Red_Church.png", 
   "湖景村": "Lakeside_Village.png", "月の河公園": "Moon_River_Park.png", "レオの思い出": "Leo's_Memory.png", 
   "永眠町": "Eversleeping_Town.png", "中華街": "China_Town.png","罪の森": "Darkwoods.png"
+
+  // Trait (8)
+  "リッスン": "Listen.png", "異常": "Abnormal.png", "興奮": "Excitement.png", "巡視者": "Patroller.png", 
+  "瞬間移動": "Teleport.png", "監視者": "Peeper.png", "神出鬼没": "Blink.png", "移形": "Warp.png",
 };
 
 // --- 画像パス取得関数 (ここを差し替え) ---
@@ -184,6 +194,12 @@ function getImgPath(folder, name) {
       const result = personas[Math.floor(Math.random() * personas.length)];
       document.getElementById("personaResult").textContent = "人格： " + result;
       addHistory("[人格] → " + result);
+    }
+
+  function spinTrait() {
+      const force = document.getElementById("forceTrait").value;
+      const result = force || traits[Math.floor(Math.random() * traits.length)];
+      displayResult("trait", "特質", result, "traitResult", "traitImg");
     }
 
     function spinMap() {
