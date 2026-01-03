@@ -37,11 +37,9 @@
 
   <hr>
 
-  <div class="persona-area">
     <h2>人格ルーレット</h2>
     <div class="result" id="personaResult">人格：？？？</div>
     <button onclick="spinPersona()">人格を決める！</button>
-  </div>
 
   <hr>
 
@@ -183,11 +181,9 @@ function getImgPath(folder, name) {
     }
 
   function spinPersona() {
-      const force = document.getElementById("forcePersona").value;
-      const result = force || personas[Math.floor(Math.random() * personas.length)];
+      const result = personas[Math.floor(Math.random() * personas.length)];
       document.getElementById("personaResult").textContent = "人格： " + result;
       addHistory("[人格] → " + result);
-      if(force) document.getElementById("forcePersona").value = "";
     }
 
     function spinMap() {
