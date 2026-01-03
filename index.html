@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>IdentityV Roulette Pro Fixed</title>
+  <title>IdentityV Roulette</title>
   <style>
     body { font-family: sans-serif; text-align: center; margin: 20px; background-color: #f0f0f0; }
     h1 { font-size: 24px; color: #333; cursor: pointer; user-select: none; }
@@ -110,7 +110,7 @@
 </div>
 
 <script>
-    // --- データ定義 ---
+    // --- 1. データ定義 ---
     const hunters = ["レオ", "ピエロ", "鹿", "リッパー", "蜘蛛", "芸者", "白黒", "ジョゼフ", 
                      "バルク", "ハスター", "魔女", "泣き虫", "ルキノ", "女王", "ボンボン", "アン", "アントニオ", "ガラテア", 
                      "アンデッド", "ウィル", "グレイス", "蝋人形師", "悪夢", "キーガン", "隠者", "イタカ", "サングリア",
@@ -124,46 +124,46 @@
     const maps = ["軍需工場", "聖心病院", "赤の教会", "湖景村", "月の河公園", "レオの思い出", "永眠町", "中華街","罪の森"];
     const shibaris = ["チェイス中自分で実況解説をする", "試合中お嬢様言葉", "チェイス中板倒し、板破壊禁止", "チェイス中窓枠乗り越え禁止",
                       "試合中ミュート＋チャット禁止", "チェイス中アイテム、スキル禁止", "解読、治療などの調整をすべてミスする", 
-                      "試合中日本語禁止",];
+                      "試合中日本語禁止"];
     const personas = ["右のみ", "左のみ", "下のみ", "上のみ", "右下", "左右", "右上" , "上下" , "左下" , "左上" , "人格なし"];
     const traits = ["リッスン", "異常", "興奮", "巡視者", "瞬間移動", "監視者", "神出鬼没", "移形"];
 
-const imageMap = {
-  // ハンター (34)
-  "レオ": "Hell_Ember.png", "ピエロ": "Smiley_Face.png", "鹿": "Gamekeeper.png", "リッパー": "The_Ripper.png",
-  "蜘蛛": "Soul_Weaver.png", "芸者": "Geisha.png", "白黒": "Wu_Chang.png", "ジョゼフ": "Photographer.png",
-  "バルク": "Mad_Eyes.png", "ハスター": "The_Feaster.png", "魔女": "Dream_Witch.png", "泣き虫": "Axe_Boy.png",
-  "ルキノ": "Evil_Reptilian.png", "女王": "Bloody_Queen.png", "ボンボン": "Guard_26.png", "アン": "Disciple.png",
-  "アントニオ": "Violinist.png", "ガラテア": "Sculptor.png", "アンデッド": "Undead.png", "ウィル": "The_Breaking_Wheel.png",
-  "グレイス": "Naiad.png", "蝋人形師": "Wax_Artist.png", "悪夢": "Nightmare.png", "キーガン": "Clerk.png",
-  "隠者": "Hermit.png", "イタカ": "Night_Watch.png", "サングリア": "Opera_Singer.png", "フルゴ": "Fool's_Gold.png",
-  "アイビィ": "The_Shadow.png", "足萎え": "Goatman.png", "フラバルー": "Hullabaloo.png", "雑貨商": "Peddier.png",
-  "ビリヤードプレイヤー": "Cueist.png", "女王蜂": "Queen_Bee.png",
+    const imageMap = {
+      // ハンター
+      "レオ": "Hell_Ember.png", "ピエロ": "Smiley_Face.png", "鹿": "Gamekeeper.png", "リッパー": "The_Ripper.png",
+      "蜘蛛": "Soul_Weaver.png", "芸者": "Geisha.png", "白黒": "Wu_Chang.png", "ジョゼフ": "Photographer.png",
+      "バルク": "Mad_Eyes.png", "ハスター": "The_Feaster.png", "魔女": "Dream_Witch.png", "泣き虫": "Axe_Boy.png",
+      "ルキノ": "Evil_Reptilian.png", "女王": "Bloody_Queen.png", "ボンボン": "Guard_26.png", "アン": "Disciple.png",
+      "アントニオ": "Violinist.png", "ガラテア": "Sculptor.png", "アンデッド": "Undead.png", "ウィル": "The_Breaking_Wheel.png",
+      "グレイス": "Naiad.png", "蝋人形師": "Wax_Artist.png", "悪夢": "Nightmare.png", "キーガン": "Clerk.png",
+      "隠者": "Hermit.png", "イタカ": "Night_Watch.png", "サングリア": "Opera_Singer.png", "フルゴ": "Fool's_Gold.png",
+      "アイビィ": "The_Shadow.png", "足萎え": "Goatman.png", "フラバルー": "Hullabaloo.png", "雑貨商": "Peddler.png",
+      "ビリヤードプレイヤー": "Cueist.png", "女王蜂": "Queen_Bee.png",
 
-  // サバイバー (49)
-  "医師": "Doctor.png", "弁護士": "Lawyer.png", "泥棒": "Thief.png", "庭師": "Gardener.png",
-  "マジシャン": "Magician.png", "冒険家": "Explorer.png", "傭兵": "Mercenary.png", "空軍": "Coordinator.png",
-  "祭司": "Priestess.png", "機械技師": "Mechanic.png", "オフェンス": "Forward.png", "心眼": "The_Mind's_Eye.png",
-  "調香師": "Perfumer.png", "カウボーイ": "Cowboy.png", "踊り子": "Female_Dancer.png", "占い師": "Seer.png",
-  "納棺師": "Embalmer.png", "探鉱者": "Prospector.png", "呪術師": "Enchantress.png", "野人": "Wildling.png",
-  "曲芸師": "Acrobat.png", "一等航海士": "First_Officer.png", "バーメイド": "Barmaid.png", "ポストマン": "Postman.png",
-  "墓守": "Grave_Keeper.png", "囚人": "Prisoner.png", "昆虫学者": "Entomologist.png", "画家": "Painter.png",
-  "バッツマン": "Batter.png", "玩具職人": "Toy_Merchant.png", "患者": "Patient.png", "心理学者": "Psychologist.png",
-  "小説家": "Novelist.png", "少女": "Little_Girl.png", "泣きピエロ": "Weeping_Clown.png", "教授": "Professor.png",
-  "骨董商": "Antiquarian.png", "作曲家": "Composer.png", "記者": "Journalist.png", "航空エンジニア": "Aeroplanist.png",
-  "応援団": "Cheerleader.png", "人形師": "Puppeteer.png","火災調査員": "Fire_Investigator.png", "レディファウロ": "Faro_Lady.png", "騎士": "Knight.png",
-  "気象学者": "Meteorologist.png", "弓使い": "Archer.png", "脱出マスター": "Escapologist.png", "幸運児": "Lucky_Guy.png",
-  "幻灯師": "Lanternist.png",
+      // サバイバー
+      "医師": "Doctor.png", "弁護士": "Lawyer.png", "泥棒": "Thief.png", "庭師": "Gardener.png",
+      "マジシャン": "Magician.png", "冒険家": "Explorer.png", "傭兵": "Mercenary.png", "空軍": "Coordinator.png",
+      "祭司": "Priestess.png", "機械技師": "Mechanic.png", "オフェンス": "Forward.png", "心眼": "The_Mind's_Eye.png",
+      "調香師": "Perfumer.png", "カウボーイ": "Cowboy.png", "踊り子": "Female_Dancer.png", "占い師": "Seer.png",
+      "納棺師": "Embalmer.png", "探鉱者": "Prospector.png", "呪術師": "Enchantress.png", "野人": "Wildling.png",
+      "曲芸師": "Acrobat.png", "一等航海士": "First_Officer.png", "バーメイド": "Barmaid.png", "ポストマン": "Postman.png",
+      "墓守": "Grave_Keeper.png", "囚人": "Prisoner.png", "昆虫学者": "Entomologist.png", "画家": "Painter.png",
+      "バッツマン": "Batter.png", "玩具職人": "Toy_Merchant.png", "患者": "Patient.png", "心理学者": "Psychologist.png",
+      "小説家": "Novelist.png", "少女": "Little_Girl.png", "泣きピエロ": "Weeping_Clown.png", "教授": "Professor.png",
+      "骨董商": "Antiquarian.png", "作曲家": "Composer.png", "記者": "Journalist.png", "航空エンジニア": "Aeroplanist.png",
+      "応援団": "Cheerleader.png", "人形師": "Puppeteer.png","火災調査員": "Fire_Investigator.png", "レディファウロ": "Faro_Lady.png", "騎士": "Knight.png",
+      "気象学者": "Meteorologist.png", "弓使い": "Archer.png", "脱出マスター": "Escapologist.png", "幸運児": "Lucky_Guy.png",
+      "幻灯師": "Lanternist.png",
 
-  // マップ (8)
-  "軍需工場": "Arms_Factory.png", "聖心病院": "Sacred_Heart_Hospital.png", "赤の教会": "The_Red_Church.png", 
-  "湖景村": "Lakeside_Village.png", "月の河公園": "Moon_River_Park.png", "レオの思い出": "Leo's_Memory.png", 
-  "永眠町": "Eversleeping_Town.png", "中華街": "China_Town.png","罪の森": "Darkwoods.png"
+      // マップ
+      "軍需工場": "Arms_Factory.png", "聖心病院": "Sacred_Heart_Hospital.png", "赤の教会": "The_Red_Church.png", 
+      "湖景村": "Lakeside_Village.png", "月の河公園": "Moon_River_Park.png", "レオの思い出": "Leo's_Memory.png", 
+      "永眠町": "Eversleeping_Town.png", "中華街": "China_Town.png","罪の森": "Darkwoods.png",
 
-  // Trait (8)
-  "リッスン": "Listen.png", "異常": "Abnormal.png", "興奮": "Excitement.png", "巡視者": "Patroller.png", 
-  "瞬間移動": "Teleport.png", "監視者": "Peeper.png", "神出鬼没": "Blink.png", "移形": "Warp.png",
-};
+      // 特質
+      "リッスン": "Listen.png", "異常": "Abnormal.png", "興奮": "Excitement.png", "巡視者": "Patroller.png", 
+      "瞬間移動": "Teleport.png", "監視者": "Peeper.png", "神出鬼没": "Blink.png", "移形": "Warp.png"
+    };
 
     // --- 2. 共通・ユーティリティ関数 ---
     function addHistory(text) {
@@ -181,7 +181,8 @@ const imageMap = {
 
     function getImgPath(folder, name) {
       const fileName = imageMap[name];
-      return fileName ? folder + "/" + fileName + ".png" : "";
+      // imageMapの値にすでに.pngが含まれているため、ここでは付け足さない
+      return fileName ? folder + "/" + fileName : "";
     }
 
     function displayResult(folder, label, name, textId, imgId) {
