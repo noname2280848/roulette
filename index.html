@@ -2,40 +2,33 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>IdentityV Roulette Pro Max</title>
+  <title>IdentityV Roulette Pro Fixed</title>
   <style>
     body { font-family: sans-serif; text-align: center; margin: 20px; background-color: #f0f0f0; }
-    h1 { font-size: 24px; color: #333; cursor: pointer; }
+    h1 { font-size: 24px; color: #333; cursor: pointer; user-select: none; }
     h2 { font-size: 20px; margin-top: 30px; border-bottom: 2px solid #ccc; display: inline-block; padding: 0 20px; }
     h3 { font-size: 18px; color: #555; margin-top: 15px; }
-    
     .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    
     button { font-size: 16px; padding: 10px 20px; margin: 5px; cursor: pointer; border-radius: 5px; border: none; background-color: #4A90E2; color: white; transition: 0.2s; }
     button:hover { background-color: #357ABD; }
-    
     .result { font-size: 20px; margin: 10px; font-weight: bold; min-height: 1.2em; color: #d35400; }
     .result-img { max-width: 150px; max-height: 150px; margin-top: 10px; display: none; border: 2px solid #ddd; border-radius: 8px; }
-    
     textarea, input[type="text"], select { width: 90%; font-size: 16px; margin: 10px auto; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
     textarea { height: 100px; font-family: monospace; }
-
-    /* セクション分け */
     .section-box { margin: 20px 0; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
     .map-area { background: #eef; }
     .sub-area { background: #fff4e6; border-color: #fab005; }
     .trait-area { background: #e3f2fd; border-color: #2196f3; }
     .utility-area { background: #f8f9fa; display: flex; flex-wrap: wrap; justify-content: space-around; gap: 10px; }
     .util-box { flex: 1; min-width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
-
-    #adminPanel { margin-top: 50px; padding: 20px; border: 1px dashed #f00; display: none; background: #fff5f5; }
+    #adminPanel { margin-top: 50px; padding: 20px; border: 1px dashed #f00; display: none; background: #fff5f5; text-align: left; }
   </style>
 </head>
 <body>
 
 <div class="container">
   <h1 onclick="toggleAdmin()">IdentityVルーレット</h1>
-  
+
   <div class="section-box">
     <div class="result" id="hunterResult">ハンター：？？？</div>
     <img id="hunterImg" class="result-img" src="" alt="hunter">
@@ -92,13 +85,13 @@
     <div class="util-box">
       <h3>休憩ルーレット</h3>
       <input type="text" id="breakInput" placeholder="名前を「、」で区切って入力">
-      <div class="result" id="breakResult" style="font-size: 16px;"></div>
+      <div class="result" id="breakResult" style="font-size: 16px; color: #333;"></div>
       <button onclick="spinBreak()">休憩順を決める</button>
     </div>
     <div class="util-box">
       <h3>チーム分けルーレット</h3>
       <input type="text" id="teamInput" placeholder="名前を「、」で区切って入力">
-      <div class="result" id="teamResult" style="font-size: 16px;"></div>
+      <div class="result" id="teamResult" style="font-size: 16px; color: #333;"></div>
       <button onclick="splitTeams()">チームを分ける</button>
     </div>
   </div>
@@ -108,17 +101,16 @@
 
   <div id="adminPanel">
     <h3 style="color:red;">【管理者操作モード】</h3>
-    ハンター(EN名)：<input type="text" id="forceHunter" placeholder="例：hell_ember"><br>
-    特質(EN名)：<input type="text" id="forceTrait" placeholder="例：blink"><br>
-    サバイバー(EN名)：<input type="text" id="forceSurvivor" placeholder="例：doctor"><br>
-    マップ(EN名)：<input type="text" id="forceMap" placeholder="例：arms_factory">
+    <p>※ここに「表示名（日本語）」を入力すると結果を固定できます。</p>
+    ハンター：<input type="text" id="forceHunter" placeholder="例：レオ"><br>
+    特質：<input type="text" id="forceTrait" placeholder="例：神出鬼没"><br>
+    サバイバー：<input type="text" id="forceSurvivor" placeholder="例：医師"><br>
+    マップ：<input type="text" id="forceMap" placeholder="例：軍需工場">
   </div>
 </div>
 
 <script>
-    第五ルーレット
-
-// --- データ定義 ---
+    // --- データ定義 ---
     const hunters = ["レオ", "ピエロ", "鹿", "リッパー", "蜘蛛", "芸者", "白黒", "ジョゼフ", 
                      "バルク", "ハスター", "魔女", "泣き虫", "ルキノ", "女王", "ボンボン", "アン", "アントニオ", "ガラテア", 
                      "アンデッド", "ウィル", "グレイス", "蝋人形師", "悪夢", "キーガン", "隠者", "イタカ", "サングリア",
@@ -173,8 +165,20 @@ const imageMap = {
   "瞬間移動": "Teleport.png", "監視者": "Peeper.png", "神出鬼没": "Blink.png", "移形": "Warp.png",
 };
 
+    // --- 2. 共通・ユーティリティ関数 ---
+    function addHistory(text) {
+      const history = document.getElementById("history");
+      history.value += text + "\n";
+      history.scrollTop = history.scrollHeight;
+    }
 
-    // --- 共通関数 ---
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
     function getImgPath(folder, name) {
       const fileName = imageMap[name];
       return fileName ? folder + "/" + fileName + ".png" : "";
@@ -184,50 +188,57 @@ const imageMap = {
       document.getElementById(textId).textContent = label + "： " + name;
       const img = document.getElementById(imgId);
       const path = getImgPath(folder, name);
-      img.src = path;
-      img.style.display = "inline-block";
-      img.onerror = () => { img.style.display = "none"; };
+      if (path) {
+        img.src = path;
+        img.style.display = "inline-block";
+        img.onerror = () => { img.style.display = "none"; };
+      } else {
+        img.style.display = "none";
+      }
       addHistory("[" + label + "] → " + name);
     }
 
-    // --- 各ルーレット実行 ---
+    // --- 3. ルーレット各機能 ---
     function spinHunter() {
-      const force = document.getElementById("forceHunter").value;
-      const result = force || hunters_list[Math.floor(Math.random() * hunters_list.length)];
-      displayResult("hunter", "ハンター", result, "hunterResult", "hunterImg");
+      const f = document.getElementById("forceHunter").value.trim();
+      const res = f || hunters[Math.floor(Math.random() * hunters.length)];
+      displayResult("hunter", "ハンター", res, "hunterResult", "hunterImg");
+      if(f) document.getElementById("forceHunter").value = "";
     }
 
     function spinTrait() {
-      const force = document.getElementById("forceTrait").value;
-      const result = force || traits[Math.floor(Math.random() * traits.length)];
-      displayResult("trait", "特質", result, "traitResult", "traitImg");
+      const f = document.getElementById("forceTrait").value.trim();
+      const res = f || traits[Math.floor(Math.random() * traits.length)];
+      displayResult("trait", "特質", res, "traitResult", "traitImg");
+      if(f) document.getElementById("forceTrait").value = "";
     }
 
     function spinSurvivor() {
-      const force = document.getElementById("forceSurvivor").value;
-      const result = force || survivors[Math.floor(Math.random() * survivors.length)];
-      displayResult("survivor", "サバイバー", result, "survivorResult", "survivorImg");
+      const f = document.getElementById("forceSurvivor").value.trim();
+      const res = f || survivors[Math.floor(Math.random() * survivors.length)];
+      displayResult("survivor", "サバイバー", res, "survivorResult", "survivorImg");
+      if(f) document.getElementById("forceSurvivor").value = "";
     }
 
     function spinMap() {
-      const force = document.getElementById("forceMap").value;
-      const result = force || maps[Math.floor(Math.random() * maps.length)];
-      displayResult("map", "マップ", result, "mapResult", "mapImg");
+      const f = document.getElementById("forceMap").value.trim();
+      const res = f || maps[Math.floor(Math.random() * maps.length)];
+      displayResult("map", "マップ", res, "mapResult", "mapImg");
+      if(f) document.getElementById("forceMap").value = "";
     }
 
     function spinPersona() {
-      const result = personas[Math.floor(Math.random() * personas.length)];
-      document.getElementById("personaResult").textContent = "人格： " + result;
-      addHistory("[人格] → " + result);
+      const res = personas[Math.floor(Math.random() * personas.length)];
+      document.getElementById("personaResult").textContent = "人格： " + res;
+      addHistory("[人格] → " + res);
     }
 
     function spinShibari() {
-      const result = shibaris[Math.floor(Math.random() * shibaris.length)];
-      document.getElementById("shibariResult").textContent = "縛り内容： " + result;
-      addHistory("[縛り] → " + result);
+      const res = shibaris[Math.floor(Math.random() * shibaris.length)];
+      document.getElementById("shibariResult").textContent = "縛り内容： " + res;
+      addHistory("[縛り] → " + res);
     }
 
-    // --- 数値抽選 ---
     function rollMapNumber() {
       const mapVal = document.getElementById("mapSelector").value;
       if (!mapVal) { alert("先にマップを選択してください。"); return; }
@@ -248,13 +259,12 @@ const imageMap = {
       img.style.display = "inline-block";
     }
 
-    // --- 休憩・チーム分け (復活ロジック) ---
     function spinBreak() {
       let input = document.getElementById("breakInput").value;
       let names = input.split(/[\n,、]/).map(n => n.trim()).filter(n => n);
       if (names.length < 2) { alert("2人以上入力してください。"); return; }
       shuffle(names);
-      document.getElementById("breakResult").innerHTML = "休憩順：<br>" + names.join(" → ");
+      document.getElementById("breakResult").innerHTML = names.join(" → ");
       addHistory("[休憩順] → " + names.join(" → "));
     }
 
@@ -266,40 +276,29 @@ const imageMap = {
       let mid = Math.ceil(names.length / 2);
       let teamA = names.slice(0, mid);
       let teamB = names.slice(mid);
-      document.getElementById("teamResult").innerHTML = "チームA: " + teamA.join(", ") + "<br>チームB: " + teamB.join(", ");
+      document.getElementById("teamResult").innerHTML = "A: " + teamA.join(", ") + "<br>B: " + teamB.join(", ");
       addHistory("[チーム] A: " + teamA.join(",") + " | B: " + teamB.join(","));
     }
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
-
-    function addHistory(text) {
-      const history = document.getElementById("history");
-      history.value += text + "\n";
-      history.scrollTop = history.scrollHeight;
-    }
-
-    // --- 初期化 ---
-    const mapSelector = document.getElementById("mapSelector");
-    maps.forEach(m => {
-      let opt = document.createElement("option");
-      opt.value = m; opt.textContent = m;
-      mapSelector.appendChild(opt);
-    });
+    // --- 4. 初期化と管理者パネル ---
+    window.onload = function() {
+      const mapSelector = document.getElementById("mapSelector");
+      maps.forEach(m => {
+        let opt = document.createElement("option");
+        opt.value = m; opt.textContent = m;
+        mapSelector.appendChild(opt);
+      });
+    };
 
     let clickCount = 0;
     function toggleAdmin() {
-      if (++clickCount >= 3) {
+      clickCount++;
+      if (clickCount >= 3) {
         const panel = document.getElementById("adminPanel");
-        panel.style.display = (panel.style.display === "none") ? "block" : "none";
+        panel.style.display = (panel.style.display === "none" || panel.style.display === "") ? "block" : "none";
         clickCount = 0;
       }
     }
 </script>
-
 </body>
 </html>
