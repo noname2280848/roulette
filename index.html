@@ -37,6 +37,14 @@
 
   <hr>
 
+  <div class="persona-area">
+    <h2>人格ルーレット</h2>
+    <div class="result" id="personaResult">人格：？？？</div>
+    <button onclick="spinPersona()">人格を決める！</button>
+  </div>
+
+  <hr>
+
   <div class="result" id="mapResult">マップ：？？？</div>
   <img id="mapImg" class="result-img" src="" alt="map">
   <br>
@@ -88,6 +96,7 @@
     const shibaris = ["チェイス中自分で実況解説をする", "試合中お嬢様言葉", "チェイス中板倒し、板破壊禁止", "チェイス中窓枠乗り越え禁止",
                       "試合中ミュート＋チャット禁止", "チェイス中アイテム、スキル禁止", "解読、治療などの調整をすべてミスする", 
                       "試合中日本語禁止",];
+    const personas = ["右のみ", "左のみ", "下のみ", "上のみ", "右下", "左右", "右上" , "上下" , "左下" , "左上" , "人格なし"];
 
 const imageMap = {
   // ハンター (34)
@@ -171,6 +180,14 @@ function getImgPath(folder, name) {
       const result = force || survivors[Math.floor(Math.random() * survivors.length)];
       displayResult("survivor", "サバイバー", result, "survivorResult", "survivorImg");
       if(force) document.getElementById("forceSurvivor").value = "";
+    }
+
+  function spinPersona() {
+      const force = document.getElementById("forcePersona").value;
+      const result = force || personas[Math.floor(Math.random() * personas.length)];
+      document.getElementById("personaResult").textContent = "人格： " + result;
+      addHistory("[人格] → " + result);
+      if(force) document.getElementById("forcePersona").value = "";
     }
 
     function spinMap() {
