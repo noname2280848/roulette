@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>IdentityVルーレット Pro (フォルダ参照版)</title>
+  <title>IdentityVルーレット</title>
   <style>
     body { font-family: sans-serif; text-align: center; margin: 20px; background-color: #f0f0f0; }
     h1 { font-size: 24px; color: #333; cursor: pointer; }
@@ -22,7 +22,6 @@
 
 <div class="container">
   <h1 onclick="toggleAdmin()">IdentityVルーレット</h1>
-  <p style="font-size: 11px; color: #aaa;">(タイトル3回クリックで設定開閉)</p>
 
   <div class="result" id="hunterResult">ハンター：？？？</div>
   <img id="hunterImg" class="result-img" src="" alt="hunter">
@@ -52,7 +51,7 @@
   <hr>
 
   <div class="map-select-area">
-    <h2>マップ指定 & 数値抽選</h2>
+    <h2>スポーン位置ルーレット</h2>
     <select id="mapSelector" onchange="updateSelectedMap()">
       <option value="">--マップを選択してください--</option>
     </select>
@@ -194,10 +193,30 @@ function getImgPath(folder, name) {
     }
 
     function rollMapNumber() {
-      const num = Math.floor(Math.random() * 100) + 1;
-      document.getElementById("mapRandomNumber").textContent = "抽選数値： " + num;
-      addHistory("[マップ数値] → " + num);
-    }
+  const mapVal = document.getElementById("mapSelector").value;
+  
+  // マップが選択されていない場合の処理
+  if (!mapVal) {
+    alert("先にマップを選択してください。");
+    return;
+  }
+
+  let maxNum = 9; // デフォルト（それ以外のマップ）は1〜9
+
+  // マップ名に応じた条件分岐
+  if (mapVal === "湖景村" || mapVal === "月の河公園") {
+    maxNum = 12; // 1〜12
+  } else if (mapVal === "永眠町") {
+    maxNum = 10; // 1〜10
+  }
+
+  // 1からmaxNumまでのランダムな数字を生成
+  const num = Math.floor(Math.random() * maxNum) + 1;
+  
+  // 結果を表示
+  document.getElementById("mapRandomNumber").textContent = "抽選数値 (1～" + maxNum + ")： " + num;
+  addHistory("[マップ数値] " + mapVal + " → " + num);
+}
 
     function addHistory(text) {
       const history = document.getElementById("history");
