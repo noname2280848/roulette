@@ -214,8 +214,8 @@ function getImgPath(folder, name) {
   const num = Math.floor(Math.random() * maxNum) + 1;
   
   // 結果を表示
-  document.getElementById("mapRandomNumber").textContent = "抽選数値 (1～" + maxNum + ")： " + num;
-  addHistory("[マップ数値] " + mapVal + " → " + num);
+  document.getElementById("mapRandomNumber").textContent = "スポーン位置： " + num;
+  addHistory("[スポーン位置] " + mapVal + " → " + num);
 }
 
     function addHistory(text) {
