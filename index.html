@@ -72,6 +72,20 @@
     <button onclick="rollMapNumber()">スポーン位置を決める！</button>
   </div>
 
+  <!-- 休憩ルーレット -->
+  <h2>休憩ルーレット</h2>
+  <div>
+    <textarea id="restInput" placeholder="名前を「、」で区切って入力してください"></textarea><br>
+    <button onclick="spinBreak()">休憩ルーレットを開始！</button>
+    <div class="result" id="restResult">休憩順：？？？</div>
+  
+  <!-- チーム分けルーレット -->
+  <h2>チーム分けルーレット</h2>
+  <p>名前を改行で入力してください：</p>
+  <textarea id="teamInput" placeholder="名前を「、」で区切って入力してください"></textarea><br>
+  <button onclick="spinTeam()">チームを分ける</button>
+  <div class="output" id="teamOutput"></div>
+
   <h2>抽選履歴</h2>
   <textarea id="history" readonly></textarea>
 
