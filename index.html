@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>IdentityVルーレット </title>
+  <title>IdentityVルーレット Pro (フォルダ参照版)</title>
   <style>
     body { font-family: sans-serif; text-align: center; margin: 20px; background-color: #f0f0f0; }
     h1 { font-size: 24px; color: #333; cursor: pointer; }
@@ -23,6 +22,7 @@
 
 <div class="container">
   <h1 onclick="toggleAdmin()">IdentityVルーレット</h1>
+  <p style="font-size: 11px; color: #aaa;">(タイトル3回クリックで設定開閉)</p>
 
   <div class="result" id="hunterResult">ハンター：？？？</div>
   <img id="hunterImg" class="result-img" src="" alt="hunter">
@@ -75,62 +75,18 @@
 
 <script>
     // --- データ定義 ---
-    const hunters = ["レオ", "ピエロ", "鹿", "リッパー", "蜘蛛", "芸者", "白黒", "ジョゼフ", "バルク",
-                     "ハスター", "魔女", "泣き虫", "ルキノ", "女王", "ボンボン", "アン", "アントニオ", "ガラテア", "アンデッド", "ウィル",
-                     "グレイス", "蝋人形師", "悪夢", "キーガン", "隠者", "イタカ", "サングリア", "フルゴ", "アイビィ", "足萎え", "フラバルー", "雑貨商","ビリヤードプレイヤー","女王蜂"];
-    const survivors = ["医師", "弁護士", "泥棒", "庭師", "マジシャン", "冒険家", "傭兵", "空軍", "祭司", "機械技師", 
-                       "オフェンス", "心眼", "調香師", "カウボーイ", "踊り子", "占い師", "納棺師", "探鉱者", "呪術師", "野人",
-                       "曲芸師", "一等航海士", "バーメイド", "ポストマン", "墓守", "囚人", "昆虫学者", "画家", "バッツマン", "玩具職人",
-                       "患者", "心理学者", "小説家", "少女", "泣きピエロ", "教授", "骨董商", "作曲家", "記者", "航空エンジニア", "応援団", "人形師",
-                       "レディファウロ", "騎士", "気象学者", "弓使い", "脱出マスター", "幸運児","幻灯師"];
+    const hunters = ["レオ", "ピエロ", "鹿", "リッパー", "蜘蛛", "芸者", "白黒", "ジョゼフ", "バルク", "ハスター", "魔女", "泣き虫", "ルキノ", "女王", "ボンボン", "アン", "アントニオ", "ガラテア", "アンデッド", "ウィル", "グレイス", "蝋人形師", "悪夢", "キーガン", "隠者", "イタカ", "サングリア", "フルゴ", "アイビィ", "足萎え", "フラバルー", "雑貨商","ビリヤードプレイヤー","女王蜂"];
+    const survivors = ["医師", "弁護士", "泥棒", "庭師", "マジシャン", "冒険家", "傭兵", "空軍", "祭司", "機械技師", "オフェンス", "心眼", "調香師", "カウボーイ", "踊り子", "占い師", "納棺師", "探鉱者", "呪術師", "野人", "曲芸師", "一等航海士", "バーメイド", "ポストマン", "墓守", "囚人", "昆虫学者", "画家", "バッツマン", "玩具職人", "患者", "心理学者", "小説家", "少女", "泣きピエロ", "教授", "骨董商", "作曲家", "記者", "航空エンジニア", "応援団", "人形師", "レディファウロ", "騎士", "気象学者", "弓使い", "脱出マスター", "幸運児","幻灯師"];
     const maps = ["軍需工場", "聖心病院", "赤の教会", "湖景村", "月の河公園", "レオの思い出", "永眠町", "中華街"];
     const shibaris = ["解読禁止", "窓枠越え禁止", "板倒し禁止", "アイテム使用禁止", "常にしゃがみ移動", "救助禁止", "一等航海士の時計のみ使用可", "特定の暗号機のみ解読", "徒歩移動限定"];
 
-  // --- 完全版 imageMap (全91項目) ---
-  const imageMap = {
-  // ハンター (34)
-  "レオ": "レオ.png", "ピエロ": "smiley_face.png", "鹿": "gamekeeper.png", "リッパー": "ripper.png",
-  "蜘蛛": "soul_weaver.png", "芸者": "geisha.png", "白黒": "wu_chang.png", "ジョゼフ": "photographer.png",
-  "バルク": "mad_eyes.png", "ハスター": "feaster.png", "魔女": "dream_witch.png", "泣き虫": "axe_boy.png",
-  "ルキノ": "evil_reptilian.png", "女王": "bloody_queen.png", "ボンボン": "guard_26.png", "アン": "disciple.png",
-  "アントニオ": "violinist.png", "ガラテア": "sculptor.png", "アンデッド": "undead.png", "ウィル": "breaking_wheel.png",
-  "グレイス": "naiad.png", "蝋人形師": "wax_artist.png", "悪夢": "nightmare.png", "キーガン": "clerk.png",
-  "隠者": "hermit.png", "イタカ": "night_watch.png", "サングリア": "opera_singer.png", "フルゴ": "fools_gold.png",
-  "アイビィ": "ivy.png", "足萎え": "goatman.png", "フラバルー": "hullabaloo.png", "雑貨商": "merchant.png",
-  "ビリヤードプレイヤー": "billiard.png", "女王蜂": "queen_bee.png",
-
-  // サバイバー (49)
-  "医師": "doctor.png", "弁護士": "lawyer.png", "泥棒": "thief.png", "庭師": "gardener.png",
-  "マジシャン": "magician.png", "冒険家": "explorer.png", "傭兵": "mercenary.png", "空軍": "coordinator.png",
-  "祭司": "priestess.png", "機械技師": "mechanic.png", "オフェンス": "forward.png", "心眼": "the_mind_eye.png",
-  "調香師": "perfumer.png", "カウボーイ": "cowboy.png", "踊り子": "female_dancer.png", "占い師": "seer.png",
-  "納棺師": "embalmer.png", "探鉱者": "prospector.png", "呪術師": "enchantress.png", "野人": "wildling.png",
-  "曲芸師": "acrobat.png", "一等航海士": "first_officer.png", "バーメイド": "barmaid.png", "ポストマン": "postman.png",
-  "墓守": "grave_keeper.png", "囚人": "prisoner.png", "昆虫学者": "entomologist.png", "画家": "painter.png",
-  "バッツマン": "batter.png", "玩具職人": "toy_merchant.png", "患者": "patient.png", "心理学者": "psychologist.png",
-  "小説家": "novelist.png", "少女": "little_girl.png", "泣きピエロ": "weeping_clown.png", "教授": "professor.png",
-  "骨董商": "antiquarian.png", "作曲家": "composer.png", "記者": "journalist.png", "航空エンジニア": "aeroplanist.png",
-  "応援団": "cheerleader.png", "人形師": "puppeteer.png", "レディファウロ": "faro_lady.png", "騎士": "knight.png",
-  "気象学者": "meteorologist.png", "弓使い": "archer.png", "脱出マスター": "escape_master.png", "幸運児": "lucky_guy.png",
-  "幻灯師": "phantasmagoria.png",
-
-  // マップ (8)
-  "軍需工場": "arms_factory.png", "聖心病院": "sacred_heart_hospital.png", "赤の教会": "red_church.png", 
-  "湖景村": "lakeside_village.png", "月の河公園": "moon_river_park.png", "レオの思い出": "leos_memory.png", 
-  "永眠町": "eversleeping_town.png", "中華街": "chinatown.png"
-};
-
-// --- 画像パス取得関数 (ここを差し替え) ---
-function getImgPath(folder, name) {
-  const fileName = imageMap[name];
-  if (!fileName) {
-    console.error("imageMapに登録がありません:", name);
-    return ""; 
-  }
-  // フォルダ名/英数字ファイル名.png を返す
-  return folder + "/" + fileName;
-}
-
+    // --- 画像パスの設定 ---
+    // フォルダ名/キャラ名.png となるように設定しています
+    function getImgPath(folder, name) {
+      // 拡張子が .jpg の場合は以下を ".jpg" に書き換えてください
+      const extension = ".png"; 
+      return folder + "/" + name + extension;
+    }
 
     // --- 初期化：セレクトボックス生成 ---
     const mapSelector = document.getElementById("mapSelector");
