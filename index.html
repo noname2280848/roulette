@@ -238,6 +238,31 @@ function getImgPath(folder, name) {
       img.style.display = "inline-block";
     }
 
+    // 休憩ルーレット（全員をシャッフルして一括表示）
+    function spinBreak() {
+      const input = document.getElementById("breakInput").value.trim();
+      if (!input) return alert("名前を入力してください");
+      const names = input.split("、").map(name => name.trim()).filter(n => n);
+      const result = shuffleArray(names);
+      const resultText = result.join(" → ");
+      document.getElementById("breakResult").textContent = "休憩順： " + resultText;
+      addHistory("[休憩順] → " + resultText);
+    }
+
+    // チーム分け（2チームにシャッフルして分ける）
+    function spinTeam() {
+      const input = document.getElementById("teamInput").value.trim();
+      if (!input) return alert("名前を入力してください");
+      const names = input.split("、").map(name => name.trim()).filter(n => n);
+      const shuffled = shuffleArray(names);
+      const mid = Math.ceil(shuffled.length / 2);
+      const teamA = shuffled.slice(0, mid).join("、");
+      const teamB = shuffled.slice(mid).join("、");
+      const resultText = `チームA：${teamA} ／ チームB：${teamB}`;
+      document.getElementById("teamResult").textContent = "チーム分け： " + resultText;
+      addHistory("[チーム分け] → " + resultText);
+    }
+
     function rollMapNumber() {
   const mapVal = document.getElementById("mapSelector").value;
   
